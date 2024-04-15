@@ -26,6 +26,9 @@ struct ContentView: View {
     @State var searchText = ""
     var body: some View {
         NavigationStack{
+            
+            Button("Get Notices", systemImage: "arrow.up", action: getUsers)
+            
             if notices.count == 0 && !searchText.isEmpty{
                 VStack{
                     ProgressView().padding()
@@ -58,7 +61,6 @@ struct ContentView: View {
                                 .font(.system(size:11))
                                 .foregroundColor(Color.gray)
                         }
-                        
                     }
                 }
             }
