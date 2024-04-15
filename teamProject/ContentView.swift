@@ -9,13 +9,9 @@ import SwiftUI
 
 // API url  https://api.github.com/search/users?q=greg
 
-// Both structs use Codable so that we can passs them to the JSON Decord to decode the JSON response string back into the structs
-
-// Structs will contain the information returned from the JSON
-// NOTE that the variable names have to be exactly like in the JSON file
 
 //indivisual User from the json
-struct User: Codable {
+struct User: Codable { // creating variables to store user  data from JSON response
     public var login: String
     public var url: String
     public var avatar_url:String
@@ -23,12 +19,12 @@ struct User: Codable {
 }
 // the items array from the JSON
 struct Result: Codable {
-    var items:[User]
+    var items:[User] // JSON RESULT
 }
 
 struct ContentView: View {
-    @State var users:[User] = []
-    @State var searchText = ""
+    @State var users:[User] = [] // array for users
+    @State var searchText = "" // empty string for input
     var body: some View {
         NavigationStack{
             if users.count == 0 && !searchText.isEmpty{
@@ -43,6 +39,7 @@ struct ContentView: View {
                 }
             } else {
                 // bind the list to the User array
+                // show the users in list
                 List(users, id:\.login) {user in
                     // links to their github profile using Safari
                     Link(destination:URL(string:user.html_url)!){
@@ -71,7 +68,7 @@ struct ContentView: View {
                     }
                 }
             }
-        }.searchable(text:$searchText)
+        }.searchable(text:$searchText) // on submit get users that match the input search text
             .onSubmit(of: .search){
                 getUsers()
             }
@@ -79,22 +76,22 @@ struct ContentView: View {
     
     // fetches the Users from the github api
     
-    func getUsers(){
+    func getUsers(){ // function for searching based on user input
         // Add Search content
-        let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedSearchText = searchText.trimmingCharacters(in: .whitespacesAndNewlines) // take whitespace out of input text
         
         //Proceed only if searchText is not empty or just whitespace
         guard !trimmedSearchText.isEmpty else {
             return
         }
-        if let apiURL = URL(string:"https://api.github.com/search/users?q=\(trimmedSearchText)"){
-            var request = URLRequest(url:apiURL)
-            request.httpMethod = "GET"
-            URLSession.shared.dataTask(with: request){
-                data, response,error in
+        if let apiURL = URL(string:"https://api.github.com/search/users?q=\(trimmedSearchText)"){ // search the api data
+            var request = URLRequest(url:apiURL) // store the request response
+            request.httpMethod = "GET" // grab the request response
+            URLSession.shared.dataTask(with: request){ // stores data in memory using session
+                data, response,error in // grab data from response and process error
                 if let userData = data {
                     if let usersFromAPI = try? JSONDecoder().decode(Result.self, from: userData){
-                        users = usersFromAPI.items
+                        users = usersFromAPI.items 
                         print(users)
                     }
                 }

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// ENTRY POINT
+
 @main
 struct teamProjectApp: App {
     var body: some Scene {
