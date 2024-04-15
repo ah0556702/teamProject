@@ -25,6 +25,8 @@ struct ContentView: View {
     @State var searchText = ""
     var body: some View {
         NavigationStack{
+            Button("Get Notices", systemImage: "arrow.up", action: getUsers)
+            
             
         }
     }
