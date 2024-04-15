@@ -14,6 +14,7 @@ struct Notice: Codable {
     public var surname: String
     public var imgUrl: String
     public var id: String
+    public var html_url: String
 }
 
 struct Result: Codable{
@@ -25,9 +26,42 @@ struct ContentView: View {
     @State var searchText = ""
     var body: some View {
         NavigationStack{
-            Button("Get Notices", systemImage: "arrow.up", action: getUsers)
-            
-            
+            if notices.count == 0 && !searchText.isEmpty{
+                VStack{
+                    ProgressView().padding()
+                    Text("Fetching Notices...")
+                        .foregroundStyle(Color.red)
+                        .onAppear{
+                            getUsers()
+                        }
+                }
+            } else {
+                List(notices, id:\.id){notice in
+                    Link(destination:URL(string:notice.html_url)!){
+                        
+                        // diplay the image
+                        HStack(alignment:.top){
+                            AsyncImage(url:URL(string: notice.imgUrl)){ response in
+                                switch response {
+                                case .success(let image):
+                                    image.resizable()
+                                        .frame(width:50, height: 50)
+                                default:
+                                    Image(systemName:"nosign")
+                                }
+                            }
+                        }
+                        
+                        VStack(alignment: .leading){
+                            Text(notice.forename)
+                            Text("\(notice.surname)")
+                                .font(.system(size:11))
+                                .foregroundColor(Color.gray)
+                        }
+                        
+                    }
+                }
+            }
         }
     }
     
@@ -60,3 +94,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+
