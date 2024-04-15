@@ -64,7 +64,10 @@ struct ContentView: View {
                     }
                 }
             }
-        }
+        }.searchable(text:$searchText)
+            .onSubmit(of: .search){
+                getUsers()
+            }
     }
     
     // fetches the Users from the github api
